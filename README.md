@@ -1,7 +1,7 @@
 ![shio_banner.png](https://shiocms.github.io/shio/img/shio_banner.png) 
 ------
 
-**Viglet Shio Client** - Shio CMS command line client to connect to remote Shio CMS and execute actions.
+**Viglet Shio Client** - Command line client to connect to remote Shio CMS and execute actions.
 
 **If you'd like to contribute to Viglet Shio Client, be sure to review the [contribution
 guidelines](CONTRIBUTING.md).**
