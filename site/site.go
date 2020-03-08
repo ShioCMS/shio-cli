@@ -1,4 +1,4 @@
-package main
+package site
 
 import (
 	"bytes"
@@ -7,9 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/http/cookiejar"
 	"os"
-	"strings"
 
 	"github.com/BurntSushi/toml"
 	"github.com/alexcesaro/log/stdlog"
@@ -39,40 +37,8 @@ func ReadConfig() Config {
 	return config
 }
 
-func main() {
-	siteName := ""
-	fmt.Println("Starting the application...")
-
-	if strings.Compare(os.Args[1], "new") == 0 {
-		xsrfToken := ""
-		siteName = os.Args[2]
-
-		config := ReadConfig()
-		cookieJar, _ := cookiejar.New(nil)
-		client := &http.Client{
-			Jar: cookieJar,
-		}
-		req, err := http.NewRequest("GET", config.Server+"/api/v2", nil)
-		req.SetBasicAuth(config.Login, config.Password)
-		resp, err := client.Do(req)
-
-		if err != nil {
-			log.Fatal(err)
-		} else {
-			xsrfToken = getCookieByName(resp.Cookies(), "XSRF-TOKEN")
-		}
-
-		if resp.StatusCode == 200 {
-			fmt.Println("Connected!")
-
-		} else {
-			fmt.Println("Authentication Failed!")
-		}
-
-		newSite(client, config, xsrfToken, siteName)
-	}
-}
-func getCookieByName(cookies []*http.Cookie, name string) string {
+// GetCookieByName ...
+func GetCookieByName(cookies []*http.Cookie, name string) string {
 	logger := stdlog.GetFromFlags()
 	result := ""
 	for _, cookie := range cookies {
@@ -85,7 +51,8 @@ func getCookieByName(cookies []*http.Cookie, name string) string {
 	return result
 }
 
-func newSite(client *http.Client, config Config, xsrfToken string, siteName string) {
+// NewSite ...
+func NewSite(client *http.Client, config Config, xsrfToken string, siteName string) {
 	logger := stdlog.GetFromFlags()
 	jsonData := map[string]string{"objectType": "SITE", "name": siteName}
 	jsonValue, _ := json.Marshal(jsonData)
